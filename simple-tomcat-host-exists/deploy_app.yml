@@ -1,0 +1,12 @@
+---
+- name: deploy application
+  hosts: appservers
+  tasks:
+    - name: Copy files to the app appservers
+      copy:
+        src: ./files/SimpleJavaWebApp.war
+        dest: /opt/tomcat/webapps/SimpleJavaWebApp.war
+        owner: tomcat
+        group: tomcat
+        mode: u+rw,g+rw,o-wx
+      become: true
