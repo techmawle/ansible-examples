@@ -1,0 +1,24 @@
+---
+# tasks file for deploy-to-tomcat
+- name: Invoke handler to stop tomcat
+  command: echo "Stopping tomcat service"
+  notify: Stop Tomcat Service
+- name: Delete existing deployment war
+  file:
+    path: /opt/tomcat/webapps/SimpleJavaWebApp.war
+    state: absent
+  become: true
+- name: Delete existing deployment folder
+  file:
+    path: /opt/tomcat/webapps/SimpleJavaWebApp
+    state: absent
+  become: true
+- name: Copy files to the app appservers
+  copy:
+    src: ./files/SimpleJavaWebApp.war
+    dest: /opt/tomcat/webapps/SimpleJavaWebApp.war
+    owner: tomcat
+    group: tomcat
+    mode: u+rw,g+rw,o-wx
+  become: true
+  notify: Start Tomcat Service
